@@ -24,6 +24,7 @@ import br.edu.ifsulminas.mch.homeworkhelper.model.Task;
 import br.edu.ifsulminas.mch.homeworkhelper.model.persistence.TaskDAO;
 
 public class MainActivity extends AppCompatActivity {
+
     private ListView todoList;
 
     @Override
@@ -37,14 +38,18 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Setup dos componente
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v->{
+        fab.setOnClickListener(v -> {
+
             Intent formIntent = new Intent(MainActivity.this, FormActivity.class);
             startActivity(formIntent);
         });
 
         todoList = findViewById(R.id.todo_list);
-        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        registerForContextMenu(todoList);
+
+        todoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task task = (Task) todoList.getItemAtPosition(position);
@@ -65,26 +70,25 @@ public class MainActivity extends AppCompatActivity {
         updateTasksList();
     }
 
-    private void updateTasksList() {
+    private void updateTasksList(){
         TaskDAO dao = new TaskDAO(this);
         List<Task> tasks = dao.listAll();
 
         ArrayAdapter<Task> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, tasks);
-
         todoList.setAdapter(adapter);
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
+        //super.onCreateContextMenu(menu, v, menuInfo);
         MenuItem itemDelete = menu.add("Concluir Tarefa");
 
         itemDelete.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(@NonNull MenuItem item) {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
                 Task task = (Task) todoList.getItemAtPosition(info.position);
 
                 TaskDAO dao = new TaskDAO(MainActivity.this);
