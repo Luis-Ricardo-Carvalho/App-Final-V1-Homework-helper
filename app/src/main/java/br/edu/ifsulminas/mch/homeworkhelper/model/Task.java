@@ -8,6 +8,7 @@ public class Task implements Serializable {
     private int id;
     private String description;
     private boolean active;
+    private Discipline discipline;
 
     public int getId() {
         return id;
@@ -29,6 +30,14 @@ public class Task implements Serializable {
     }
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        this.discipline = discipline;
     }
 
     @NonNull
