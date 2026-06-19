@@ -6,15 +6,24 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
     private int id;
+    private String name;
     private String description;
+    private String dateSubmission;
     private boolean active;
+    private int subjectId;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -24,6 +33,13 @@ public class Task implements Serializable {
         this.description = description;
     }
 
+    public String getDateSubmission() {
+        return dateSubmission;
+    }
+    public void setDateSubmission(String dateSubmission) {
+        this.dateSubmission = dateSubmission;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -31,9 +47,16 @@ public class Task implements Serializable {
         this.active = active;
     }
 
+    public int getSubjectId() {
+        return subjectId;
+    }
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return getDescription();
+        return getName();
     }
 }
