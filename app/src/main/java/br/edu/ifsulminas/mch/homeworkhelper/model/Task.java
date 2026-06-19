@@ -10,11 +10,7 @@ public class Task implements Serializable {
     private String description;
     private String dateSubmission;
     private boolean active;
-<<<<<<< HEAD
     private int subjectId;
-=======
-    private Discipline discipline;
->>>>>>> 55ee532b95ca6608b680e507b8aaf7e9b16443cb
 
     public int getId() {
         return id;
@@ -51,20 +47,11 @@ public class Task implements Serializable {
         this.active = active;
     }
 
-<<<<<<< HEAD
     public int getSubjectId() {
         return subjectId;
     }
     public void setSubjectId(int subjectId) {
         this.subjectId = subjectId;
-=======
-    public Discipline getDiscipline() {
-        return discipline;
-    }
-
-    public void setDiscipline(Discipline discipline) {
-        this.discipline = discipline;
->>>>>>> 55ee532b95ca6608b680e507b8aaf7e9b16443cb
     }
 
     @NonNull
