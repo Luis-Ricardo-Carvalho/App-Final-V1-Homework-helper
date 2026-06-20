@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".FormActivity">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_save_task"
-        android:title="@string/save_task"
-        android:icon="@drawable/ic_save"
-        app:showAsAction="always"/>
-
+        android:id="@+id/menu_edit_subject"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Editar Matéria"
+        app:showAsAction="always" />
 </menu>
-

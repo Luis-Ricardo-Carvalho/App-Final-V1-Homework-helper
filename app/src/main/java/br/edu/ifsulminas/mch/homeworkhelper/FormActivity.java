@@ -16,15 +16,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import br.edu.ifsulminas.mch.homeworkhelper.model.Subject;
 import br.edu.ifsulminas.mch.homeworkhelper.model.Task;
 import br.edu.ifsulminas.mch.homeworkhelper.model.persistence.TaskDAO;
 
-public class FormActivity  extends AppCompatActivity {
+public class FormActivity extends AppCompatActivity {
 
     public static final String TASK_KEY = "tarefa";
     private Task task = null;
+    private Subject currentSubject = null;
 
+    private EditText nameEditText;
     private EditText descEditText;
+    private EditText dateEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,55 +41,79 @@ public class FormActivity  extends AppCompatActivity {
             return insets;
         });
 
-        // Suporte a Action bar
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("SUBJECT_FOR_TASK")) {
+            currentSubject = (Subject) intent.getSerializableExtra("SUBJECT_FOR_TASK");
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        Intent calingIntent = getIntent();
-        task = (Task) calingIntent.getSerializableExtra(TASK_KEY);
-
+        nameEditText = findViewById(R.id.task_name);
         descEditText = findViewById(R.id.task_description);
+        dateEditText = findViewById(R.id.task_date);
 
-        if (task != null)
+        if (intent != null && intent.hasExtra(TASK_KEY)) {
+            task = (Task) intent.getSerializableExtra(TASK_KEY);
+        }
+
+        if (task != null) {
+            nameEditText.setText(task.getName());
             descEditText.setText(task.getDescription());
+            dateEditText.setText(task.getDateSubmission());
+        }
 
-        descEditText.requestFocus();
+        nameEditText.requestFocus();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_form,menu);
-
+        getMenuInflater().inflate(R.menu.menu_form, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
 
-        if(item.getItemId() == R.id.menu_save_task){
+        if (item.getItemId() == R.id.menu_edit_subject) {
+            String name = nameEditText.getText().toString();
             String desc = descEditText.getText().toString();
+            String date = dateEditText.getText().toString();
 
-            if ("".equals(desc) || desc.isBlank()){
+            if (name.isBlank() || desc.isBlank() || date.isBlank()) {
                 Toast.makeText(getBaseContext(),
-                        "Descrição da tarefa não pode ser vazia",
+                        "Por favor, preencha todos os campos da tarefa.",
                         Toast.LENGTH_SHORT).show();
             } else {
                 boolean isInsert = false;
-                if(task == null) {
+                if (task == null) {
                     task = new Task();
                     isInsert = true;
                 }
 
+                task.setName(name);
                 task.setDescription(desc);
+                task.setDateSubmission(date);
                 task.setActive(true);
+
+                if (isInsert && currentSubject != null) {
+                    task.setSubjectId(currentSubject.getId());
+                }
 
                 TaskDAO dao = new TaskDAO(this);
 
-                if (isInsert)
+                if (isInsert) {
                     dao.save(task);
-                else dao.update(task);
+                } else {
+                    dao.update(task);
+                }
 
                 Toast.makeText(getBaseContext(),
                         "Tarefa salva com sucesso",
@@ -93,6 +121,7 @@ public class FormActivity  extends AppCompatActivity {
 
                 finish();
             }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

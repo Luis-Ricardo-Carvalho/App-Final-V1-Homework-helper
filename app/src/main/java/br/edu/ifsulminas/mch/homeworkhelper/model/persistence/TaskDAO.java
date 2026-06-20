@@ -86,4 +86,40 @@ public class TaskDAO extends DAO {
         db.close();
         return tasks;
     }
+    public List<Task> listAllBySubject(int subjectIdFilter) {
+        List<Task> tasks = new ArrayList<>();
+
+        SQLiteDatabase db = openToRead();
+
+        String sql = "SELECT * FROM " + TablesData.Tasks.NAME +
+                " WHERE " + TablesData.Tasks.SUBJECT_ID + " = ?" +
+                " ORDER BY " + TablesData.Tasks.PK + ";";
+
+        String[] params = {String.valueOf(subjectIdFilter)};
+        Cursor cursor = db.rawQuery(sql, params);
+
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.PK));
+            String name = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.TASK_NAME));
+            String desc = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DESC));
+            String dateSubmission = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DATE_SUBMISSION));
+            String activeStr = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.ACTIVE));
+            boolean active = "1".equals(activeStr);
+            int subjectId = cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.SUBJECT_ID));
+
+            Task task = new Task();
+            task.setId(id);
+            task.setName(name);
+            task.setDescription(desc);
+            task.setDateSubmission(dateSubmission);
+            task.setActive(active);
+            task.setSubjectId(subjectId);
+
+            tasks.add(task);
+        }
+
+        cursor.close();
+        db.close();
+        return tasks;
+    }
 }
