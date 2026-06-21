@@ -10,6 +10,7 @@ dimen activity_vertical_margin
 dimen edit_texts_height
 dimen fab_margin
 dimen margin_to_action_bar
+drawable ic_check
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_launcher_web
@@ -43,6 +44,7 @@ layout activity_main
 layout item_subject
 layout item_task
 menu menu_form
+menu menu_form_save
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round
@@ -61,6 +63,7 @@ string task_done
 string task_saved
 string task_updated
 string title_activity_form
+string title_activity_form_subject
 style AppTheme
 style AppTheme.AppBarOverlay
 style AppTheme.NoActionBar

@@ -25,6 +25,7 @@
     <string name="task_saved">Tarefa salva</string>
     <string name="task_updated">Tarefa atualizada</string>
     <string name="title_activity_form">Cadastrar Atividade</string>
+    <string name="title_activity_form_subject">Cadastrar Máteria</string>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         
         <item name="colorPrimary">@color/colorPrimary</item>
