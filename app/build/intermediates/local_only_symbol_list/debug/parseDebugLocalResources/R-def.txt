@@ -17,6 +17,7 @@ drawable ic_launcher_web
 drawable ic_save
 id appBarLayout
 id appBarLayoutMain
+id btn_date
 id fab
 id form
 id form_subject
@@ -27,7 +28,6 @@ id subject_list
 id subject_name
 id subject_schoolYear
 id subject_teacher
-id task_date
 id task_description
 id task_name
 id todo_list

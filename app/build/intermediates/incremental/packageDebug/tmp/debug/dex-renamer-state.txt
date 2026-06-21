@@ -1,4 +1,4 @@
-#Sun Jun 21 11:37:00 BRT 2026
+#Sun Jun 21 13:47:05 BRT 2026
 base.0=C\:\\Users\\gabri\\Desktop\\PDM\\AndroidStudioProjects\\ProjetoFinal\\App-Final-V1-Homework-helper\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\gabri\\Desktop\\PDM\\AndroidStudioProjects\\ProjetoFinal\\App-Final-V1-Homework-helper\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.2=C\:\\Users\\gabri\\Desktop\\PDM\\AndroidStudioProjects\\ProjetoFinal\\App-Final-V1-Homework-helper\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\14\\classes.dex

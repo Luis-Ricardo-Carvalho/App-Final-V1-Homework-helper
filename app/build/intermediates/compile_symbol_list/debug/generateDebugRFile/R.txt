@@ -15,6 +15,7 @@ int drawable ic_launcher_web 0x0
 int drawable ic_save 0x0
 int id appBarLayout 0x0
 int id appBarLayoutMain 0x0
+int id btn_date 0x0
 int id fab 0x0
 int id form 0x0
 int id form_subject 0x0
@@ -25,7 +26,6 @@ int id subject_list 0x0
 int id subject_name 0x0
 int id subject_schoolYear 0x0
 int id subject_teacher 0x0
-int id task_date 0x0
 int id task_description 0x0
 int id task_name 0x0
 int id todo_list 0x0
