@@ -53,7 +53,7 @@
             android:inputType="textMultiLine"
             android:minHeight="@dimen/edit_texts_height" />
     </com.google.android.material.textfield.TextInputLayout>
-
+    
     <Button
         android:id="@+id/btn_date"
         android:layout_width="match_parent"
