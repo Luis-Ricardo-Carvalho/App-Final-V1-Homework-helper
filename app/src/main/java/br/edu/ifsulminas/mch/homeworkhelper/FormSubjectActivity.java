@@ -39,7 +39,6 @@ public class FormSubjectActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Suporte Action bar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,7 +62,7 @@ public class FormSubjectActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_form,menu);
+        getMenuInflater().inflate(R.menu.menu_form_save,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -71,7 +70,7 @@ public class FormSubjectActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
-        if(item.getItemId() == R.id.menu_save_task){
+        if(item.getItemId() == R.id.menu_edit_subject){
             String name = nameEditText.getText().toString();
             String teacher = teacherEditText.getText().toString();
             String schoolYear = schoolYearEditText.getText().toString();

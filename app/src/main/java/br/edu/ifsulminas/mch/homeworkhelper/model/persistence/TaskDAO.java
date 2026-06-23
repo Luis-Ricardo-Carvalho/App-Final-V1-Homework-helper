@@ -25,6 +25,7 @@ public class TaskDAO extends DAO {
         values.put(TablesData.Tasks.DATE_SUBMISSION, task.getDateSubmission());
         values.put(TablesData.Tasks.ACTIVE, task.isActive() ? "1" : "0");
         values.put(TablesData.Tasks.SUBJECT_ID, task.getSubjectId());
+        values.put(TablesData.Tasks.CALENDAR_EVENT_ID, task.getCalendarEventId());
 
         db.insert(TablesData.Tasks.NAME, null, values);
         db.close();
@@ -39,6 +40,7 @@ public class TaskDAO extends DAO {
         values.put(TablesData.Tasks.DATE_SUBMISSION, task.getDateSubmission());
         values.put(TablesData.Tasks.ACTIVE, task.isActive() ? "1" : "0");
         values.put(TablesData.Tasks.SUBJECT_ID, task.getSubjectId());
+        values.put(TablesData.Tasks.CALENDAR_EVENT_ID, task.getCalendarEventId());
 
         String[] params = {String.valueOf(task.getId())};
         db.update(TablesData.Tasks.NAME, values, TablesData.Tasks.PK + "= ?", params);
@@ -47,7 +49,6 @@ public class TaskDAO extends DAO {
 
     public void delete(Task task) {
         SQLiteDatabase db = openToWrite();
-
         String[] params = {String.valueOf(task.getId())};
         db.delete(TablesData.Tasks.NAME, TablesData.Tasks.PK + "= ?", params);
         db.close();
@@ -55,30 +56,47 @@ public class TaskDAO extends DAO {
 
     public List<Task> listAll() {
         List<Task> tasks = new ArrayList<>();
-
         SQLiteDatabase db = openToRead();
         String sql = "SELECT * FROM " + TablesData.Tasks.NAME +
                 " ORDER BY " + TablesData.Tasks.PK + ";";
-
         Cursor cursor = db.rawQuery(sql, null);
 
         while (cursor.moveToNext()) {
-            int id = cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.PK));
-            String name = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.TASK_NAME));
-            String desc = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DESC));
-            String dateSubmission = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DATE_SUBMISSION));
-            String activeStr = cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.ACTIVE));
-            boolean active = "1".equals(activeStr);
-            int subjectId = cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.SUBJECT_ID));
-
             Task task = new Task();
-            task.setId(id);
-            task.setName(name);
-            task.setDescription(desc);
-            task.setDateSubmission(dateSubmission);
-            task.setActive(active);
-            task.setSubjectId(subjectId);
+            task.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.PK)));
+            task.setName(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.TASK_NAME)));
+            task.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DESC)));
+            task.setDateSubmission(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DATE_SUBMISSION)));
+            task.setActive("1".equals(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.ACTIVE))));
+            task.setSubjectId(cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.SUBJECT_ID)));
+            task.setCalendarEventId(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.CALENDAR_EVENT_ID)));
+            tasks.add(task);
+        }
 
+        cursor.close();
+        db.close();
+        return tasks;
+    }
+
+    public List<Task> listAllBySubject(int subjectIdFilter) {
+        List<Task> tasks = new ArrayList<>();
+        SQLiteDatabase db = openToRead();
+
+        String sql = "SELECT * FROM " + TablesData.Tasks.NAME +
+                " WHERE " + TablesData.Tasks.SUBJECT_ID + " = ?" +
+                " ORDER BY " + TablesData.Tasks.PK + ";";
+        String[] params = {String.valueOf(subjectIdFilter)};
+        Cursor cursor = db.rawQuery(sql, params);
+
+        while (cursor.moveToNext()) {
+            Task task = new Task();
+            task.setId(cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.PK)));
+            task.setName(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.TASK_NAME)));
+            task.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DESC)));
+            task.setDateSubmission(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.DATE_SUBMISSION)));
+            task.setActive("1".equals(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.ACTIVE))));
+            task.setSubjectId(cursor.getInt(cursor.getColumnIndexOrThrow(TablesData.Tasks.SUBJECT_ID)));
+            task.setCalendarEventId(cursor.getString(cursor.getColumnIndexOrThrow(TablesData.Tasks.CALENDAR_EVENT_ID)));
             tasks.add(task);
         }
 

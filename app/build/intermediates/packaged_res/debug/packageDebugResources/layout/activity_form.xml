@@ -24,9 +24,25 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/margin_to_action_bar"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nome da Tarefa"
+            android:inputType="textCapSentences"
+            android:minHeight="@dimen/edit_texts_height" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -34,7 +50,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/task_description"
+            android:inputType="textMultiLine"
             android:minHeight="@dimen/edit_texts_height" />
     </com.google.android.material.textfield.TextInputLayout>
+    
+    <Button
+        android:id="@+id/btn_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="Selecionar Data de Entrega" />
 
 </LinearLayout>

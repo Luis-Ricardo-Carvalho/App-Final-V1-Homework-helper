@@ -25,6 +25,7 @@ class TablesData {
         static final String DATE_SUBMISSION = "date_submission";
         static final String ACTIVE = "active";
         static final String SUBJECT_ID = "subject_id";
+        static final String CALENDAR_EVENT_ID = "calendar_event_id";
 
         static final String CREATE_SQL =
                 "CREATE TABLE IF NOT EXISTS " + NAME + " ( " +
@@ -34,6 +35,7 @@ class TablesData {
                         DATE_SUBMISSION + " DATE, " +
                         ACTIVE + " VARCHAR(1), " +
                         SUBJECT_ID + " INTEGER NOT NULL, " +
+                        CALENDAR_EVENT_ID + " VARCHAR(100), " +
                         "FOREIGN KEY (" + SUBJECT_ID + ") REFERENCES " +
                         Subject.NAME + "(" + Subject.PK + ") );";
     }

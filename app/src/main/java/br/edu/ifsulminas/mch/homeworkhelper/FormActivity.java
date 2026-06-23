@@ -1,12 +1,12 @@
 package br.edu.ifsulminas.mch.homeworkhelper;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,16 +15,26 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import android.widget.Button;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import br.edu.ifsulminas.mch.homeworkhelper.model.Subject;
 import br.edu.ifsulminas.mch.homeworkhelper.model.Task;
 import br.edu.ifsulminas.mch.homeworkhelper.model.persistence.TaskDAO;
+import android.provider.CalendarContract;
 
-public class FormActivity  extends AppCompatActivity {
+public class FormActivity extends AppCompatActivity {
 
     public static final String TASK_KEY = "tarefa";
     private Task task = null;
-
+    private Subject currentSubject = null;
+    private EditText nameEditText;
     private EditText descEditText;
+    private Button btnDate;
+    private String selectedDateISO = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,64 +47,153 @@ public class FormActivity  extends AppCompatActivity {
             return insets;
         });
 
-        // Suporte a Action bar
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("SUBJECT_FOR_TASK")) {
+            currentSubject = (Subject) intent.getSerializableExtra("SUBJECT_FOR_TASK");
+        }
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        Intent calingIntent = getIntent();
-        task = (Task) calingIntent.getSerializableExtra(TASK_KEY);
-
+        nameEditText = findViewById(R.id.task_name);
         descEditText = findViewById(R.id.task_description);
+        btnDate = findViewById(R.id.btn_date);
 
-        if (task != null)
+        if (intent != null && intent.hasExtra(TASK_KEY)) {
+            task = (Task) intent.getSerializableExtra(TASK_KEY);
+        }
+
+        if (task != null) {
+            nameEditText.setText(task.getName());
             descEditText.setText(task.getDescription());
+            if (task.getDateSubmission() != null && !task.getDateSubmission().isEmpty()) {
+                selectedDateISO = task.getDateSubmission();
+                btnDate.setText(formatDateDisplay(selectedDateISO));
+            }
+        }
 
-        descEditText.requestFocus();
+        btnDate.setOnClickListener(v -> showDatePicker());
+        nameEditText.requestFocus();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_form,menu);
-
+        getMenuInflater().inflate(R.menu.menu_form_save, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
 
-        if(item.getItemId() == R.id.menu_save_task){
+        if (item.getItemId() == R.id.menu_edit_subject) {
+            String name = nameEditText.getText().toString();
             String desc = descEditText.getText().toString();
 
-            if ("".equals(desc) || desc.isBlank()){
-                Toast.makeText(getBaseContext(),
-                        "Descrição da tarefa não pode ser vazia",
-                        Toast.LENGTH_SHORT).show();
+            if (name.isBlank() || desc.isBlank() || selectedDateISO == null || selectedDateISO.isBlank()) {
+                Toast.makeText(getBaseContext(), "Por favor, preencha todos os campos da tarefa.", Toast.LENGTH_SHORT).show();
             } else {
                 boolean isInsert = false;
-                if(task == null) {
+                if (task == null) {
                     task = new Task();
                     isInsert = true;
                 }
 
+                task.setName(name);
                 task.setDescription(desc);
+                task.setDateSubmission(selectedDateISO);
                 task.setActive(true);
 
+                if (isInsert && currentSubject != null) {
+                    task.setSubjectId(currentSubject.getId());
+                }
+
                 TaskDAO dao = new TaskDAO(this);
-
-                if (isInsert)
+                if (isInsert) {
                     dao.save(task);
-                else dao.update(task);
+                } else {
+                    dao.update(task);
+                }
 
-                Toast.makeText(getBaseContext(),
-                        "Tarefa salva com sucesso",
-                        Toast.LENGTH_SHORT).show();
-
-                finish();
+                Toast.makeText(getBaseContext(), "Tarefa salva com sucesso", Toast.LENGTH_SHORT).show();
+                abrirCalendario(task);
             }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        if (selectedDateISO != null && !selectedDateISO.isEmpty()) {
+            try {
+                SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                Date date = isoFormat.parse(selectedDateISO);
+                calendar.setTime(date);
+            } catch (ParseException e) {}
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar selected = Calendar.getInstance();
+                    selected.set(year, month, dayOfMonth);
+                    SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    selectedDateISO = isoFormat.format(selected.getTime());
+                    btnDate.setText(formatDateDisplay(selectedDateISO));
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        datePickerDialog.show();
+    }
+
+    private String formatDateDisplay(String isoDate) {
+        try {
+            SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = isoFormat.parse(isoDate);
+            SimpleDateFormat displayFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            return displayFormat.format(date);
+        } catch (ParseException e) {
+            return isoDate;
+        }
+    }
+
+    private void abrirCalendario(Task task) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = format.parse(task.getDateSubmission());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            Intent intent;
+            if (task.getCalendarEventId() == null || task.getCalendarEventId().isEmpty()) {
+                intent = new Intent(Intent.ACTION_INSERT);
+                intent.setData(CalendarContract.Events.CONTENT_URI);
+            } else {
+                intent = new Intent(Intent.ACTION_EDIT);
+                intent.setData(CalendarContract.Events.CONTENT_URI.buildUpon()
+                        .appendPath(task.getCalendarEventId()).build());
+            }
+
+            intent.putExtra(CalendarContract.Events.TITLE, task.getName());
+            intent.putExtra(CalendarContract.Events.DESCRIPTION, task.getDescription());
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendar.getTimeInMillis());
+
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            Toast.makeText(this, "Erro ao abrir calendário", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
