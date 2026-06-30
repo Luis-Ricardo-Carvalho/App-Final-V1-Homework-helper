@@ -4,11 +4,9 @@ plugins {
 
 android {
     namespace 'br.edu.ifsulminas.mch.homeworkhelper'
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+
+    // CORRIGIDO: Sintaxe limpa e padrão para o SDK 36
+    compileSdk 36
 
     defaultConfig {
         applicationId "br.edu.ifsulminas.mch.homeworkhelper"
@@ -26,9 +24,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+
+    // CORRIGIDO: Bloco adicionado para ignorar os arquivos duplicados META-INF
+    packaging {
+        resources {
+            excludes += '/META-INF/DEPENDENCIES'
+            excludes += '/META-INF/LICENSE'
+            excludes += '/META-INF/NOTICE'
+        }
     }
 }
 
@@ -41,4 +49,9 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
+
+    //noinspection LoginCredentials
+    implementation libs.play.services.auth
+    implementation libs.google.api.client.android
+    implementation 'com.google.apis:google-api-services-classroom:v1-rev20220323-2.0.0'
 }
